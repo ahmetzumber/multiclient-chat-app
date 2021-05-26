@@ -35,6 +35,11 @@ public class Menu extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         create.setText("CREATE ROOM");
+        create.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createActionPerformed(evt);
+            }
+        });
 
         jScrollPane1.setViewportView(list);
 
@@ -117,6 +122,11 @@ public class Menu extends javax.swing.JFrame {
         Message msg = new Message(Message.Message_Type.START_CHAT);
         Client.Send(msg); 
     }//GEN-LAST:event_startChatActionPerformed
+
+    private void createActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createActionPerformed
+        chat.roomlbl.setText(createTxt.getText()+"'s Room");
+        chat.setVisible(true);
+    }//GEN-LAST:event_createActionPerformed
 
     /**
      * @param args the command line arguments
