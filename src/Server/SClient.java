@@ -49,6 +49,15 @@ public class SClient implements java.io.Serializable {
             Logger.getLogger(SClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void Disconnect(){
+        try {
+            this.socket.close();
+        } catch (IOException ex) {
+            Logger.getLogger(SClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
 
     public class Listen extends Thread implements java.io.Serializable {
 
@@ -109,6 +118,7 @@ public class SClient implements java.io.Serializable {
                     }
                 } catch (IOException ex) {
                     System.out.println("Listen Thread Exceptionnn");
+                    return;
                 } catch (ClassNotFoundException ex) {
                     System.out.println("Class Not Foundddd");
                 } catch (IllegalThreadStateException te) {
