@@ -78,10 +78,16 @@ class ListenThread extends Thread implements java.io.Serializable {
                         Login.menu.dlm.removeAllElements();
                         ArrayList<String> gelenIsımler = new ArrayList();
                         gelenIsımler = (ArrayList<String>) msg.content;
-                        for (String item : gelenIsımler) {
-                            Login.menu.dlm.addElement(item);
-                        }
+                        for (String item : gelenIsımler) 
+                            Login.menu.dlm.addElement(item); 
                         break;
+                    case ROOM_LIST:
+                        Login.menu.dlm2.removeAllElements();
+                        ArrayList<String> gelenRoomlar = new ArrayList();
+                        gelenRoomlar = (ArrayList<String>) msg.content;
+                        for (String item : gelenRoomlar) 
+                            Login.menu.dlm2.addElement(item); 
+                        break;     
                     case RivalConnected:
                         System.out.println("Rival Connected girdim....");
                         String rivalName = (String) msg.content;

@@ -9,6 +9,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import Client.Room;
+import Views.Login;
 
 public class SClient implements java.io.Serializable {
 
@@ -66,7 +68,13 @@ public class SClient implements java.io.Serializable {
                         case Name:
                             System.out.println("gelen name mesajı: "+msg.content.toString());
                             sclient.name = msg.content.toString();
-                            //sclient.pairThread.start();
+                            break;
+                        case ROOM_NAME:
+                            System.out.println("gelen room name mesajı: "+msg.content.toString());
+                            Room newRoom = new Room(msg.content.toString(), sclient.name);
+                            Server.rooms.add(newRoom);
+                            Login.menu.chat.roomlbl.setText(msg.content.toString()+"'s Room");
+                            Login.menu.chat.setVisible(true);
                             break;
                         case LIST:
                             ArrayList<String> usernames = new ArrayList<String>();
@@ -74,7 +82,15 @@ public class SClient implements java.io.Serializable {
                                 usernames.add(item.name);
                             Message mesaj = new Message(Message_Type.LIST);
                             mesaj.content = usernames;
-                            Server.Send(mesaj);
+                            Server.Send(this.sclient,mesaj);
+                            break;
+                        case ROOM_LIST:
+                            ArrayList<String> roomNames = new ArrayList<String>();
+                            for (Room item : Server.rooms) 
+                                roomNames.add(item.name);
+                            Message roomListMsg = new Message(Message_Type.ROOM_LIST);
+                            roomListMsg.content = roomNames;
+                            Server.Send(this.sclient,roomListMsg);
                             break;
                         case START_CHAT:
                             Message chatStart = new Message(Message_Type.START_CHAT);
