@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import Client.Room;
 
 public class Server {
 
@@ -21,6 +22,7 @@ public class Server {
     public static ServerSocket socket;
     public static SListenThread listenThread;
     public static ArrayList<SClient> sclients = new ArrayList();
+    public static ArrayList<Room> rooms = new ArrayList();
     public static Semaphore pairingSemp = new Semaphore(1, true);
 
     public static void Start(int port) {

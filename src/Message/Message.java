@@ -4,7 +4,7 @@ public class Message implements java.io.Serializable {
     //mesaj tipleri enum 
 
     public static enum Message_Type {
-        Name, LIST, RivalConnected, CHANGE, START_CHAT, GameControl, FINISH
+        Name, ROOM_NAME, ROOM_LIST, LIST, RivalConnected, CHANGE, START_CHAT, GameControl, FINISH
     }
 
     //mesajın tipi
