@@ -76,47 +76,24 @@ class ListenThread extends Thread implements java.io.Serializable {
                         break;
                     case LIST:
                         Login.menu.dlm.removeAllElements();
-                        ArrayList<String> gelenIsımler = new ArrayList();
-                        gelenIsımler = (ArrayList<String>) msg.content;
-                        for (String item : gelenIsımler) 
+                        ArrayList<String> receivedNames = new ArrayList();
+                        receivedNames = (ArrayList<String>) msg.content;
+                        for (String item : receivedNames) 
                             Login.menu.dlm.addElement(item); 
                         break;
                     case ROOM_LIST:
                         Login.menu.dlm2.removeAllElements();
-                        ArrayList<String> gelenRoomlar = new ArrayList();
-                        gelenRoomlar = (ArrayList<String>) msg.content;
-                        for (String item : gelenRoomlar) 
+                        ArrayList<String> receivedRooms = new ArrayList();
+                        receivedRooms = (ArrayList<String>) msg.content;
+                        for (String item : receivedRooms) 
                             Login.menu.dlm2.addElement(item); 
                         break;     
-                    case RivalConnected:
-                        System.out.println("Rival Connected girdim....");
-                        String rivalName = (String) msg.content;
-                        Client.isPaired = true;
-                        //Login.control.setText("Eslestirildi...........");
-                        //Login.gs.player1.setText("You");
-                        //Login.gs.player2.setText(rivalName);
-                        //Login.gs.setVisible(true);
-                        break;
-                    case GameControl:
-                        System.out.println("GameControl girdimm....");
-                        //Login.gs.roundControl = (int) msg.content;
-                        System.out.println((int) msg.content);
-                        if ((int) msg.content == 1) {
-                            //Login.gs.changeTurn(true);
-                        } else if ((int) msg.content == 0) {
-                            //Login.gs.changeTurn(false);
-                        }
-                        break;
-                    case CHANGE:
-                        System.out.println("change turnnnn girdim");
-                        //ScoreMessage score = (ScoreMessage) msg.content;
-                        //Login.gs.getRivalButtonByGivenType(score.score_type).setText(String.valueOf(score.content));
-                        //Login.gs.roundControl = 1;
-                        //Login.gs.changeTurn(true);
-                        break;
-                    case FINISH:
-                        //Login.gs.finishState = true;
-                        //Login.gs.totalPlayer2.setText((String) msg.content);
+                    case REFRESH:
+                        Login.menu.chat.dlm.removeAllElements();
+                        ArrayList<String> roomsClients = new ArrayList();
+                        roomsClients = (ArrayList<String>) msg.content;
+                        for (String item : roomsClients) 
+                            Login.menu.chat.dlm.addElement(item);
                         break;
                 }
             } catch (IOException ex) {
