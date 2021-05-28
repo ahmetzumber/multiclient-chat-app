@@ -21,7 +21,6 @@ public class SClient implements java.io.Serializable {
     ObjectInputStream sInput;
     // dinleme threadi
     Listen listenThread;
-    //PairingThread pairThread;
     //rakip client
     SClient rival;
     //eşleşme durumu
@@ -82,6 +81,7 @@ public class SClient implements java.io.Serializable {
                             System.out.println("gelen room name mesajı: "+msg.content.toString());
                             Room newRoom = new Room(msg.content.toString(), sclient.name);
                             Server.rooms.add(newRoom);
+                            newRoom.userNamesList.add(sclient.name);    // adding the creator to room's user list
                             Login.menu.chat.roomlbl.setText(msg.content.toString()+"'s Room");
                             Login.menu.chat.setVisible(true);
                             break;
@@ -101,19 +101,23 @@ public class SClient implements java.io.Serializable {
                             roomListMsg.content = roomNames;
                             Server.Send(this.sclient,roomListMsg);
                             break;
+                        case JOIN_ROOM:
+                            // if room that you want to select exist then you can select a room from room list
+                            String choosenRoom = Login.menu.roomList.getSelectedValue();
+                            
+                            System.out.println("choosen room: "+choosenRoom);
+                            // searching a room in server, so if it is exist then enter a room
+                            // and add this sclient to rooms user list
+                            for(Room item : Server.rooms){
+                                if (item.name.equals(choosenRoom)){
+                                    item.userNamesList.add(this.sclient.name);
+                                    Login.menu.chat.setVisible(true);
+                                }
+                            }       
+                            break;
                         case START_CHAT:
                             Message chatStart = new Message(Message_Type.START_CHAT);
                             Server.Send(chatStart);
-                            break;
-                        case CHANGE:
-                            sclient.rival.Send(msg);
-                            System.out.println("Ben sclientim mesajı yolladımmmm");
-                            break;
-                        case GameControl:
-                            Server.Send(sclient.rival, msg);
-                            break;
-                        case FINISH:
-                            Server.Send(sclient.rival, msg);
                             break;
                     }
                 } catch (IOException ex) {
