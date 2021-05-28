@@ -80,6 +80,11 @@ public class Menu extends javax.swing.JFrame {
         );
 
         join.setText("JOIN ROOM");
+        join.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                joinActionPerformed(evt);
+            }
+        });
 
         showClients.setText("SHOW CLIENTS");
         showClients.addActionListener(new java.awt.event.ActionListener() {
@@ -144,9 +149,9 @@ public class Menu extends javax.swing.JFrame {
                     .addComponent(jScrollPane2)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(join)
-                    .addComponent(startChat))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(startChat)
+                    .addComponent(join))
                 .addGap(19, 19, 19))
         );
 
@@ -206,6 +211,11 @@ public class Menu extends javax.swing.JFrame {
         Message msg = new Message(Message.Message_Type.ROOM_LIST);
         Client.Send(msg);
     }//GEN-LAST:event_showRoomsActionPerformed
+
+    private void joinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinActionPerformed
+        Message msg = new Message(Message.Message_Type.JOIN_ROOM);
+        Client.Send(msg);
+    }//GEN-LAST:event_joinActionPerformed
 
     /**
      * @param args the command line arguments
