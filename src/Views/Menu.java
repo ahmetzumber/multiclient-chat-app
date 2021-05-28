@@ -12,8 +12,7 @@ public class Menu extends javax.swing.JFrame {
 
     public DefaultListModel dlm = new DefaultListModel();   // to holding clients
     public DefaultListModel dlm2 = new DefaultListModel();  // to holding rooms
-    public ArrayList<String> clientNames = new ArrayList<String>();
-    public Chat chat = new Chat();
+    public Chat chat;
     
     public Menu() {
         initComponents();
@@ -214,6 +213,8 @@ public class Menu extends javax.swing.JFrame {
 
     private void joinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinActionPerformed
         Message msg = new Message(Message.Message_Type.JOIN_ROOM);
+        msg.content = (String) roomList.getSelectedValue();
+        System.out.println("choosen room name: "+msg.content);
         Client.Send(msg);
     }//GEN-LAST:event_joinActionPerformed
 

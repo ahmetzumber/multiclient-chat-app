@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import Client.Room;
+import Views.Chat;
 import Views.Login;
 
 public class SClient implements java.io.Serializable {
@@ -21,10 +22,6 @@ public class SClient implements java.io.Serializable {
     ObjectInputStream sInput;
     // dinleme threadi
     Listen listenThread;
-    //rakip client
-    SClient rival;
-    //eşleşme durumu
-    public boolean paired = false;
 
     public SClient(int clientID, Socket socket) {
         try {
@@ -82,7 +79,8 @@ public class SClient implements java.io.Serializable {
                             Room newRoom = new Room(msg.content.toString(), sclient.name);
                             Server.rooms.add(newRoom);
                             newRoom.userNamesList.add(sclient.name);    // adding the creator to room's user list
-                            Login.menu.chat.roomlbl.setText(msg.content.toString()+"'s Room");
+                            Login.menu.chat = new Chat();
+                            Login.menu.chat.roomlbl.setText(newRoom.name.toUpperCase());
                             Login.menu.chat.setVisible(true);
                             break;
                         case LIST:
@@ -102,15 +100,14 @@ public class SClient implements java.io.Serializable {
                             Server.Send(this.sclient,roomListMsg);
                             break;
                         case JOIN_ROOM:
-                            // if room that you want to select exist then you can select a room from room list
-                            String choosenRoom = Login.menu.roomList.getSelectedValue();
-                            
-                            System.out.println("choosen room: "+choosenRoom);
+                            // msg.content == choosen room name from list
                             // searching a room in server, so if it is exist then enter a room
                             // and add this sclient to rooms user list
                             for(Room item : Server.rooms){
-                                if (item.name.equals(choosenRoom)){
+                                if (item.name.equals(msg.content)){
                                     item.userNamesList.add(this.sclient.name);
+                                    Login.menu.chat = new Chat();
+                                    Login.menu.chat.roomlbl.setText(item.name.toUpperCase()); 
                                     Login.menu.chat.setVisible(true);
                                 }
                             }       
@@ -121,12 +118,12 @@ public class SClient implements java.io.Serializable {
                             break;
                     }
                 } catch (IOException ex) {
-                    System.out.println("Listen Thread Exceptionnn");
+                    System.out.println("Listen Thread Exceptionnn: "+ex);
                     return;
                 } catch (ClassNotFoundException ex) {
-                    System.out.println("Class Not Foundddd");
+                    System.out.println("Class Not Foundddd: "+ex);;
                 } catch (IllegalThreadStateException te) {
-                    System.out.println("Illegal Threaddd");
+                    System.out.println("Illegal Threaddd: "+te);
                 }
             }
         }
