@@ -1,10 +1,9 @@
 package Message;
 
 public class Message implements java.io.Serializable {
-    //mesaj tipleri enum 
 
     public static enum Message_Type {
-        Name, ROOM_NAME, ROOM_LIST, LIST, JOIN_ROOM, START_CHAT, REFRESH
+        NAME, ROOM_NAME, ROOM_LIST, LIST, JOIN_ROOM, START_CHAT, REFRESH, TEXT
     }
 
     // type of message

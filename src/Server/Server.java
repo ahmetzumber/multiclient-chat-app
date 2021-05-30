@@ -44,6 +44,7 @@ public class Server {
         }
     }
 
+    // Server sends broadcast message to all clients 
     public static void Send(Message msg) {
         for (SClient sclient : sclients) {
             try {
@@ -52,8 +53,8 @@ public class Server {
                 Logger.getLogger(SClient.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
     }
+  
 }
 
 class SListenThread extends Thread {
