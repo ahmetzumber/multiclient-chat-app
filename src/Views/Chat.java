@@ -107,6 +107,7 @@ public class Chat extends javax.swing.JFrame {
         System.out.println("refresh clickeddd");
         Message refreshMessage = new Message(Message.Message_Type.REFRESH);
         refreshMessage.content = roomlbl.getText().toLowerCase();
+        System.out.println("refresh message.content : "+refreshMessage.content);
         Client.Send(refreshMessage);
     }//GEN-LAST:event_refreshActionPerformed
 

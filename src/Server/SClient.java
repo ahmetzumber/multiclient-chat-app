@@ -78,10 +78,9 @@ public class SClient implements java.io.Serializable {
                             System.out.println("gelen room name mesajı: "+msg.content.toString());
                             Room newRoom = new Room(msg.content.toString(), sclient.name);
                             Server.rooms.add(newRoom);
-                            newRoom.userNamesList.add(sclient.name);    // adding the creator to room's user list
-                            Login.menu.chat = new Chat();
-                            Login.menu.chat.roomlbl.setText(newRoom.name.toUpperCase());
-                            Login.menu.chat.setVisible(true);
+                            Message roomMSG = new Message(Message.Message_Type.ROOM_NAME);
+                            roomMSG.content = newRoom.name;
+                            Server.Send(this.sclient, roomMSG);
                             break;
                         case LIST:
                             ArrayList<String> usernames = new ArrayList<String>();
@@ -103,28 +102,31 @@ public class SClient implements java.io.Serializable {
                             // msg.content == choosen room name from list
                             // searching a room in server, so if it is exist then enter a room
                             // and add this sclient to rooms user list
+                            String temp = "NO";
                             for(Room item : Server.rooms){
                                 if (item.name.equals(msg.content)){
+                                    temp = item.name;
                                     item.userNamesList.add(this.sclient.name);
-                                    Login.menu.chat = new Chat();
-                                    Login.menu.chat.roomlbl.setText(item.name.toUpperCase()); 
-                                    Login.menu.chat.setVisible(true);
+                                    break;
                                 }
-                            }       
+                            }  
+                            Message roomNameMSG = new Message(Message.Message_Type.JOIN_ROOM);
+                            roomNameMSG.content = temp;
+                            Server.Send(this.sclient, roomNameMSG); 
                             break;
                         case REFRESH:
                             // msg.content == room name
                             ArrayList<String> clientNames = new ArrayList();
                             for (Room room : Server.rooms) {
-                                if (room.name.equals(msg.content)) {
+                                if (room.name.equals(msg.content.toString())) {
                                     for (String client : room.userNamesList) {
                                         clientNames.add(client);
                                     }
                                 }
                             }
-                            Message clients = new Message(Message_Type.REFRESH);
-                            clients.content = clientNames;
-                            Server.Send(this.sclient,clients);
+                            Message clientsMSG = new Message(Message_Type.REFRESH);
+                            clientsMSG.content = clientNames;
+                            Server.Send(this.sclient,clientsMSG);
                             break;
                         case START_CHAT:
                             Message chatStart = new Message(Message_Type.START_CHAT);
@@ -132,6 +134,7 @@ public class SClient implements java.io.Serializable {
                             break;
                     }
                 } catch (IOException ex) {
+                    this.sclient.Disconnect();
                     System.out.println("Listen Thread Exceptionnn: "+ex);
                     return;
                 } catch (ClassNotFoundException ex) {

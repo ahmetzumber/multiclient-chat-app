@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import Views.*;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 public class Client implements java.io.Serializable {
 
@@ -74,26 +75,43 @@ class ListenThread extends Thread implements java.io.Serializable {
                 switch (msg.type) {
                     case Name:
                         break;
+                    case ROOM_NAME:
+                        // msg.content == newRoom.name
+                        Login.menu.chat.roomlbl.setText(msg.content.toString().toUpperCase());
+                        Login.menu.chat.setVisible(true);
+                        break;
                     case LIST:
                         Login.menu.dlm.removeAllElements();
                         ArrayList<String> receivedNames = new ArrayList();
                         receivedNames = (ArrayList<String>) msg.content;
-                        for (String item : receivedNames) 
-                            Login.menu.dlm.addElement(item); 
+                        for (String item : receivedNames) {
+                            Login.menu.dlm.addElement(item);
+                        }
                         break;
                     case ROOM_LIST:
                         Login.menu.dlm2.removeAllElements();
                         ArrayList<String> receivedRooms = new ArrayList();
                         receivedRooms = (ArrayList<String>) msg.content;
-                        for (String item : receivedRooms) 
-                            Login.menu.dlm2.addElement(item); 
-                        break;     
+                        for (String item : receivedRooms) {
+                            Login.menu.dlm2.addElement(item);
+                        }
+                        break;
+                    case JOIN_ROOM:
+                        // msg.content == temp (NO or room name)
+                        if (msg.content.equals("NO")) {
+                            JOptionPane.showMessageDialog(Login.menu, "Room name Failure!!");
+                            return;
+                        }
+                        Login.menu.chat.roomlbl.setText(msg.content.toString().toUpperCase());
+                        Login.menu.chat.setVisible(true);
+                        break;
                     case REFRESH:
                         Login.menu.chat.dlm.removeAllElements();
                         ArrayList<String> roomsClients = new ArrayList();
                         roomsClients = (ArrayList<String>) msg.content;
-                        for (String item : roomsClients) 
+                        for (String item : roomsClients) {
                             Login.menu.chat.dlm.addElement(item);
+                        }
                         break;
                 }
             } catch (IOException ex) {

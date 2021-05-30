@@ -9,7 +9,7 @@ public class Menu extends javax.swing.JFrame {
 
     public DefaultListModel dlm = new DefaultListModel();   // to holding clients
     public DefaultListModel dlm2 = new DefaultListModel();  // to holding rooms
-    public Chat chat;
+    public Chat chat = new Chat();
     
     public Menu() {
         initComponents();
