@@ -112,6 +112,20 @@ public class SClient implements java.io.Serializable {
                                 }
                             }       
                             break;
+                        case REFRESH:
+                            // msg.content == room name
+                            ArrayList<String> clientNames = new ArrayList();
+                            for (Room room : Server.rooms) {
+                                if (room.name.equals(msg.content)) {
+                                    for (String client : room.userNamesList) {
+                                        clientNames.add(client);
+                                    }
+                                }
+                            }
+                            Message clients = new Message(Message_Type.REFRESH);
+                            clients.content = clientNames;
+                            Server.Send(this.sclient,clients);
+                            break;
                         case START_CHAT:
                             Message chatStart = new Message(Message_Type.START_CHAT);
                             Server.Send(chatStart);

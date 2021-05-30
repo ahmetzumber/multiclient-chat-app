@@ -1,11 +1,8 @@
 package Views;
 
 import Message.Message;
-import Server.SClient;
-import Server.Server;
 import javax.swing.DefaultListModel;
 import Client.Client;
-import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 public class Menu extends javax.swing.JFrame {
