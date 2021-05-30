@@ -73,7 +73,7 @@ class ListenThread extends Thread implements java.io.Serializable {
             try {
                 Message msg = (Message) Client.sInput.readObject();
                 switch (msg.type) {
-                    case Name:
+                    case NAME:
                         break;
                     case ROOM_NAME:
                         // msg.content == newRoom.name
@@ -112,6 +112,9 @@ class ListenThread extends Thread implements java.io.Serializable {
                         for (String item : roomsClients) {
                             Login.menu.chat.dlm.addElement(item);
                         }
+                        break;
+                    case TEXT:
+                        Login.menu.chat.textArea.append(msg.content.toString()+"\n");
                         break;
                 }
             } catch (IOException ex) {

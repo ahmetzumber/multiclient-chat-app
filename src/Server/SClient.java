@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import Client.Room;
-import Views.Chat;
-import Views.Login;
 
 public class SClient implements java.io.Serializable {
 
@@ -70,7 +68,7 @@ public class SClient implements java.io.Serializable {
                 try {
                     Message msg = (Message) sclient.sInput.readObject();
                     switch (msg.type) {
-                        case Name:
+                        case NAME:
                             System.out.println("gelen name mesajı: "+msg.content.toString());
                             sclient.name = msg.content.toString();
                             break;
@@ -131,6 +129,12 @@ public class SClient implements java.io.Serializable {
                         case START_CHAT:
                             Message chatStart = new Message(Message_Type.START_CHAT);
                             Server.Send(chatStart);
+                            break;
+                        case TEXT:
+                            // msg.content == sended message to room 
+                            Message chatMSG = new Message(Message.Message_Type.TEXT);
+                            chatMSG.content = this.sclient.name + ": " + msg.content;
+                            Server.Send(chatMSG);
                             break;
                     }
                 } catch (IOException ex) {

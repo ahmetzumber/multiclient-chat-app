@@ -84,7 +84,7 @@ public class Login extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Connection Failed !!");
                 System.exit(0);
             }
-            Message newMsg = new Message(Message.Message_Type.Name);
+            Message newMsg = new Message(Message.Message_Type.NAME);
             newMsg.content = nameTxt.getText();
             Client.Send(newMsg);
             menu.jLabel1.setText("Hi "+nameTxt.getText()+"!");
