@@ -10,6 +10,7 @@ public class Menu extends javax.swing.JFrame {
     public DefaultListModel dlm = new DefaultListModel();   // to holding clients
     public DefaultListModel dlm2 = new DefaultListModel();  // to holding rooms
     public Chat chat = new Chat();
+    public P2PChat singleChat = new P2PChat();
     
     public Menu() {
         initComponents();
@@ -190,7 +191,11 @@ public class Menu extends javax.swing.JFrame {
 
     private void startChatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startChatActionPerformed
         Message msg = new Message(Message.Message_Type.START_CHAT);
+        msg.content = (String) list.getSelectedValue();
+        msg.senderName = jLabel1.getText().substring(3, jLabel1.getText().length()-1);
+        System.out.println("msg.senderName: "+msg.senderName);
         Client.Send(msg); 
+        JOptionPane.showMessageDialog(this, "Chat response waiting...");
     }//GEN-LAST:event_startChatActionPerformed
 
     private void createActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createActionPerformed
@@ -215,11 +220,8 @@ public class Menu extends javax.swing.JFrame {
         Client.Send(msg);
     }//GEN-LAST:event_joinActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
+        
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
@@ -242,7 +244,6 @@ public class Menu extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Menu().setVisible(true);
