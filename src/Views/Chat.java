@@ -126,7 +126,7 @@ public class Chat extends javax.swing.JFrame {
             msg.content = chatText.getText();
             Client.Send(msg);
         }
-        
+        chatText.setText("");
     }//GEN-LAST:event_sendActionPerformed
 
     

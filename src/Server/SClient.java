@@ -155,6 +155,12 @@ public class SClient implements java.io.Serializable {
                                 }  
                             }              
                             break;
+                        case P2P_TEXT:
+                            // msg.content == sended message 
+                            Message textMSG = new Message(Message.Message_Type.P2P_TEXT);
+                            textMSG.content = this.sclient.name.toUpperCase() + ": " + msg.content;
+                            Server.Send(textMSG);
+                            break;
                         case TEXT:
                             // msg.content == sended message to room 
                             Message chatMSG = new Message(Message.Message_Type.TEXT);

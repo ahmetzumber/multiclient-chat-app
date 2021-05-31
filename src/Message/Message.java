@@ -3,7 +3,8 @@ package Message;
 public class Message implements java.io.Serializable {
 
     public static enum Message_Type {
-        NAME, ROOM_NAME, ROOM_LIST, LIST, JOIN_ROOM, START_CHAT, DECIDE, DECIDE_FINISH, TEXT, REFRESH
+        NAME, ROOM_NAME, ROOM_LIST, LIST, JOIN_ROOM, START_CHAT, 
+        DECIDE, DECIDE_FINISH, P2P_TEXT, TEXT, REFRESH
     }
 
     // type of message

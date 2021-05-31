@@ -1,12 +1,14 @@
 package Views;
 
+import Message.Message;
+import Client.*;
+
 public class P2PChat extends javax.swing.JFrame {
 
     public P2PChat() {
         initComponents();
     }
 
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -72,14 +74,18 @@ public class P2PChat extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendActionPerformed
-        // TODO add your handling code here:
+        if (chatText.getText() != null) {
+            Message msg = new Message(Message.Message_Type.P2P_TEXT);
+            msg.content = chatText.getText();
+            Client.Send(msg);
+        }
+        chatText.setText("");
     }//GEN-LAST:event_sendActionPerformed
 
     private void sendDocumentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendDocumentActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_sendDocumentActionPerformed
 
-    
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

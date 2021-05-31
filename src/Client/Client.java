@@ -142,6 +142,9 @@ class ListenThread extends Thread implements java.io.Serializable {
                             Login.menu.singleChat.setVisible(true);  
                         }
                         break;
+                    case P2P_TEXT:
+                        Login.menu.singleChat.textArea.append(msg.content.toString() + "\n");
+                        break;
                     case TEXT:
                         Login.menu.chat.textArea.append(msg.content.toString() + "\n");
                         break;
