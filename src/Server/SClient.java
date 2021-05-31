@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import Client.Room;
+import Views.Login;
+import javax.swing.JOptionPane;
 
 public class SClient implements java.io.Serializable {
 
@@ -43,15 +45,14 @@ public class SClient implements java.io.Serializable {
             Logger.getLogger(SClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void Disconnect(){
+
+    public void Disconnect() {
         try {
             this.socket.close();
         } catch (IOException ex) {
             Logger.getLogger(SClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
 
     public class Listen extends Thread implements java.io.Serializable {
 
@@ -60,7 +61,6 @@ public class SClient implements java.io.Serializable {
         public Listen(SClient sclient) {
             this.sclient = sclient;
         }
-        
 
         @Override
         public void run() {
@@ -69,11 +69,11 @@ public class SClient implements java.io.Serializable {
                     Message msg = (Message) sclient.sInput.readObject();
                     switch (msg.type) {
                         case NAME:
-                            System.out.println("gelen name mesajı: "+msg.content.toString());
+                            System.out.println("gelen name mesajı: " + msg.content.toString());
                             sclient.name = msg.content.toString();
                             break;
                         case ROOM_NAME:
-                            System.out.println("gelen room name mesajı: "+msg.content.toString());
+                            System.out.println("gelen room name mesajı: " + msg.content.toString());
                             Room newRoom = new Room(msg.content.toString(), sclient.name);
                             Server.rooms.add(newRoom);
                             Message roomMSG = new Message(Message.Message_Type.ROOM_NAME);
@@ -82,35 +82,37 @@ public class SClient implements java.io.Serializable {
                             break;
                         case LIST:
                             ArrayList<String> usernames = new ArrayList<String>();
-                            for (SClient item : Server.sclients) 
+                            for (SClient item : Server.sclients) {
                                 usernames.add(item.name);
+                            }
                             Message mesaj = new Message(Message_Type.LIST);
                             mesaj.content = usernames;
-                            Server.Send(this.sclient,mesaj);
+                            Server.Send(this.sclient, mesaj);
                             break;
                         case ROOM_LIST:
                             ArrayList<String> roomNames = new ArrayList<String>();
-                            for (Room item : Server.rooms) 
+                            for (Room item : Server.rooms) {
                                 roomNames.add(item.name);
+                            }
                             Message roomListMsg = new Message(Message_Type.ROOM_LIST);
                             roomListMsg.content = roomNames;
-                            Server.Send(this.sclient,roomListMsg);
+                            Server.Send(this.sclient, roomListMsg);
                             break;
                         case JOIN_ROOM:
                             // msg.content == choosen room name from list
                             // searching a room in server, so if it is exist then enter a room
                             // and add this sclient to rooms user list
-                            String temp = "NO";
-                            for(Room item : Server.rooms){
-                                if (item.name.equals(msg.content)){
-                                    temp = item.name;
+                            String tempRoomName = "NO";
+                            for (Room item : Server.rooms) {
+                                if (item.name.equals(msg.content)) {
+                                    tempRoomName = item.name;
                                     item.userNamesList.add(this.sclient.name);
                                     break;
                                 }
-                            }  
+                            }
                             Message roomNameMSG = new Message(Message.Message_Type.JOIN_ROOM);
-                            roomNameMSG.content = temp;
-                            Server.Send(this.sclient, roomNameMSG); 
+                            roomNameMSG.content = tempRoomName;
+                            Server.Send(this.sclient, roomNameMSG);
                             break;
                         case REFRESH:
                             // msg.content == room name
@@ -124,27 +126,50 @@ public class SClient implements java.io.Serializable {
                             }
                             Message clientsMSG = new Message(Message_Type.REFRESH);
                             clientsMSG.content = clientNames;
-                            Server.Send(this.sclient,clientsMSG);
+                            Server.Send(this.sclient, clientsMSG);
                             break;
                         case START_CHAT:
-                            Message chatStart = new Message(Message_Type.START_CHAT);
-                            Server.Send(chatStart);
+                            // msg.content == selected client name from list to chat
+                            Message decideMSG = new Message(Message.Message_Type.START_CHAT);
+                            decideMSG.content = (String) "DECIDE";
+                            decideMSG.whoWantsToTalk = msg.senderName;
+                            for (SClient sclient : Server.sclients) {
+                                if (sclient.name.equals(msg.content)) {
+                                    Server.Send(sclient, decideMSG);
+                                    break;
+                                }
+                            }
+                            break;
+                        case DECIDE:
+                            // msg.content == selection ---> YES = 0, NO = 1
+                            if (msg.content.equals(0)) {
+                                Message finish = new Message(Message.Message_Type.DECIDE_FINISH);
+                                finish.content = "OPEN";
+                                finish.senderName = msg.senderName;
+                                finish.whoWantsToTalk = msg.whoWantsToTalk;
+                                for (SClient item : Server.sclients) {
+                                    if (item.name.equals(msg.whoWantsToTalk)) {
+                                        Server.Send(item, finish);
+                                        break;
+                                    }
+                                }  
+                            }              
                             break;
                         case TEXT:
                             // msg.content == sended message to room 
                             Message chatMSG = new Message(Message.Message_Type.TEXT);
-                            chatMSG.content = this.sclient.name + ": " + msg.content;
+                            chatMSG.content = this.sclient.name.toUpperCase() + ": " + msg.content;
                             Server.Send(chatMSG);
                             break;
                     }
                 } catch (IOException ex) {
                     this.sclient.Disconnect();
-                    System.out.println("Listen Thread Exceptionnn: "+ex);
+                    System.out.println("Listen Thread Exceptionnn: " + ex);
                     return;
                 } catch (ClassNotFoundException ex) {
-                    System.out.println("Class Not Foundddd: "+ex);;
+                    System.out.println("Class Not Foundddd: " + ex);;
                 } catch (IllegalThreadStateException te) {
-                    System.out.println("Illegal Threaddd: "+te);
+                    System.out.println("Illegal Threaddd: " + te);
                 }
             }
         }

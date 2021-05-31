@@ -113,8 +113,37 @@ class ListenThread extends Thread implements java.io.Serializable {
                             Login.menu.chat.dlm.addElement(item);
                         }
                         break;
+                    case START_CHAT:
+                        // msg.content == "DECIDE"
+                        // msg.whoWantsToTalk == username who click start chat button
+                        // selection: receiver users decide. Is he/she wants to talk or not ?
+                        int selection = 0;
+                        if (msg.content.equals("DECIDE")) {
+                            selection = JOptionPane.showConfirmDialog(Login.menu, msg.whoWantsToTalk + " wants to talk you? Do you accept?", "Chat Request", JOptionPane.YES_OPTION);
+                        }
+
+                        if (selection == JOptionPane.YES_OPTION) {
+                            Login.menu.singleChat.setTitle(msg.whoWantsToTalk.toUpperCase());
+                            Login.menu.singleChat.setVisible(true);
+                            //  to notify the client is he/she accept to chat request ?
+                            Message decide = new Message(Message.Message_Type.DECIDE);
+                            decide.content = selection; // if option is yes selection equals 0, if it is not then selection eq 1
+                            decide.senderName = Login.menu.jLabel1.getText().substring(3, Login.menu.jLabel1.getText().length() - 1);
+                            decide.whoWantsToTalk = msg.whoWantsToTalk;
+                            Client.Send(decide);
+                        }
+
+                        
+                        break;
+                    case DECIDE_FINISH:
+                        // if msg.content open, so it means client accept to chat
+                        if (msg.content.equals("OPEN")) {
+                            Login.menu.singleChat.setTitle(msg.senderName.toUpperCase());
+                            Login.menu.singleChat.setVisible(true);  
+                        }
+                        break;
                     case TEXT:
-                        Login.menu.chat.textArea.append(msg.content.toString()+"\n");
+                        Login.menu.chat.textArea.append(msg.content.toString() + "\n");
                         break;
                 }
             } catch (IOException ex) {
