@@ -14,6 +14,8 @@ import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import Client.Room;
+import Views.Login;
+import javax.swing.JOptionPane;
 
 public class Server {
 
@@ -54,7 +56,6 @@ public class Server {
             }
         }
     }
-  
 }
 
 class SListenThread extends Thread {
