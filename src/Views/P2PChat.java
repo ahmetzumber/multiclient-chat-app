@@ -2,6 +2,14 @@ package Views;
 
 import Message.Message;
 import Client.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 
 public class P2PChat extends javax.swing.JFrame {
 
@@ -83,7 +91,35 @@ public class P2PChat extends javax.swing.JFrame {
     }//GEN-LAST:event_sendActionPerformed
 
     private void sendDocumentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendDocumentActionPerformed
-        // TODO add your handling code here:
+        JFileChooser fileChooser = new JFileChooser();
+        int selection = fileChooser.showOpenDialog(this);
+        
+        File file = null;
+        // keep selected file from chooser in file variable
+        if (selection == JFileChooser.APPROVE_OPTION)
+            file = fileChooser.getSelectedFile();
+        
+        byte fileContent[] = new byte[(int)file.length()];
+        try {
+            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+            bis.read(fileContent, 0, fileContent.length);
+            Message fileMSG = new Message(Message.Message_Type.P2P_FILE);
+            fileMSG.fileContent = fileContent;
+            fileMSG.content = file.getName(); // msg.content == file name
+            Client.Send(fileMSG);
+            System.out.println("Sended file path: "+file.getAbsolutePath());
+            
+            // notifying to message sended by who
+            String sender = Login.menu.jLabel1.getText().substring(3, Login.menu.jLabel1.getText().length()-1);
+            Message notifyFileMSG = new Message(Message.Message_Type.P2P_FILE_NOTIFY);
+            notifyFileMSG.content = sender.toUpperCase() + ": " + file.getName() + " shared";
+            Client.Send(notifyFileMSG);
+            
+        } catch (FileNotFoundException ex) {
+            System.out.println("File not found.. "+ex);
+        } catch (IOException ex) {
+            System.out.println("File read exception.."+ex);
+        }   
     }//GEN-LAST:event_sendDocumentActionPerformed
 
     public static void main(String args[]) {
