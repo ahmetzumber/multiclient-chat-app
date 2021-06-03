@@ -9,6 +9,9 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import Views.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
@@ -145,7 +148,29 @@ class ListenThread extends Thread implements java.io.Serializable {
                     case P2P_TEXT:
                         Login.menu.singleChat.textArea.append(msg.content.toString() + "\n");
                         break;
+                    case P2P_FILE:
+                        // msg.content == file name
+                        String homePath = System.getProperty("user.home");
+                        File receivedFile = new File(homePath + "/Desktop/" + msg.content);
+                        OutputStream os = new FileOutputStream(receivedFile);
+                        byte content[] = (byte[])msg.fileContent;
+                        os.write(content);
+                        break;
+                    case P2P_FILE_NOTIFY:
+                        Login.menu.singleChat.textArea.append(msg.content.toString() + "\n");
+                        break;
                     case TEXT:
+                        Login.menu.chat.textArea.append(msg.content.toString() + "\n");
+                        break;
+                    case ROOM_FILE:
+                        // msg.content == file name
+                        String homePath1 = System.getProperty("user.home");
+                        File receivedFile1 = new File(homePath1 + "/Desktop/" + msg.content);
+                        OutputStream os1 = new FileOutputStream(receivedFile1);
+                        byte content1[] = (byte[])msg.fileContent;
+                        os1.write(content1);
+                        break;
+                    case ROOM_FILE_NOTIFY:
                         Login.menu.chat.textArea.append(msg.content.toString() + "\n");
                         break;
                 }
