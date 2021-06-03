@@ -154,18 +154,34 @@ public class SClient implements java.io.Serializable {
                                     }
                                 }  
                             }              
-                            break;
+                            break;     
                         case P2P_TEXT:
                             // msg.content == sended message 
                             Message textMSG = new Message(Message.Message_Type.P2P_TEXT);
                             textMSG.content = this.sclient.name.toUpperCase() + ": " + msg.content;
                             Server.Send(textMSG);
                             break;
+                        case P2P_FILE:
+                            // msg.content == file name
+                            Server.Send(msg);
+                            break;
+                        case P2P_FILE_NOTIFY:
+                            // msg.content == filename + shared..
+                            Server.Send(msg);
+                            break;
                         case TEXT:
                             // msg.content == sended message to room 
                             Message chatMSG = new Message(Message.Message_Type.TEXT);
                             chatMSG.content = this.sclient.name.toUpperCase() + ": " + msg.content;
                             Server.Send(chatMSG);
+                            break;
+                        case ROOM_FILE:
+                            // msg.content == file name
+                            Server.Send(msg);
+                            break;
+                        case ROOM_FILE_NOTIFY:
+                            // msg.content == filename + shared..
+                            Server.Send(msg);
                             break;
                     }
                 } catch (IOException ex) {
