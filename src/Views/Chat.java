@@ -3,6 +3,12 @@ package Views;
 import javax.swing.DefaultListModel;
 import Message.*;
 import Client.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import javax.swing.JFileChooser;
 
 public class Chat extends javax.swing.JFrame {
 
@@ -27,7 +33,7 @@ public class Chat extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         roomlbl = new javax.swing.JLabel();
         refresh = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        sendDocument = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Chat Room");
@@ -56,7 +62,12 @@ public class Chat extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("+");
+        sendDocument.setText("+");
+        sendDocument.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendDocumentActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -80,7 +91,7 @@ public class Chat extends javax.swing.JFrame {
                                 .addGap(12, 12, 12)
                                 .addComponent(send, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1))
+                                .addComponent(sendDocument))
                             .addComponent(jScrollPane1)))
                     .addComponent(jLabel1))
                 .addContainerGap(29, Short.MAX_VALUE))
@@ -101,7 +112,7 @@ public class Chat extends javax.swing.JFrame {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(chatText, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(send, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(sendDocument, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -128,6 +139,38 @@ public class Chat extends javax.swing.JFrame {
         }
         chatText.setText("");
     }//GEN-LAST:event_sendActionPerformed
+
+    private void sendDocumentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendDocumentActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        int selection = fileChooser.showOpenDialog(this);
+        
+        File file = null;
+        // keep selected file from chooser in file variable
+        if (selection == JFileChooser.APPROVE_OPTION)
+            file = fileChooser.getSelectedFile();
+        
+        byte fileContent[] = new byte[(int)file.length()];
+        try {
+            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+            bis.read(fileContent, 0, fileContent.length);
+            Message fileMSG = new Message(Message.Message_Type.ROOM_FILE);
+            fileMSG.fileContent = fileContent;
+            fileMSG.content = file.getName(); // msg.content == file name
+            Client.Send(fileMSG);
+            System.out.println("Sended file path: "+file.getAbsolutePath());
+            
+            // notifying to message sended by who
+            String sender = Login.menu.jLabel1.getText().substring(3, Login.menu.jLabel1.getText().length()-1);
+            Message notifyFileMSG = new Message(Message.Message_Type.ROOM_FILE_NOTIFY);
+            notifyFileMSG.content = sender.toUpperCase() + ": " + file.getName() + " shared";
+            Client.Send(notifyFileMSG);
+            
+        } catch (FileNotFoundException ex) {
+            System.out.println("File not found.. "+ex);
+        } catch (IOException ex) {
+            System.out.println("File read exception.."+ex);
+        }
+    }//GEN-LAST:event_sendDocumentActionPerformed
 
     
     public static void main(String args[]) {
@@ -165,13 +208,13 @@ public class Chat extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JTextField chatText;
     public javax.swing.JList<String> clientList;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton refresh;
     public javax.swing.JLabel roomlbl;
     public javax.swing.JButton send;
+    private javax.swing.JButton sendDocument;
     public javax.swing.JTextArea textArea;
     // End of variables declaration//GEN-END:variables
 }
