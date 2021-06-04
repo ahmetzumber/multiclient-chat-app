@@ -79,7 +79,7 @@ public class Login extends javax.swing.JFrame {
             System.out.println("FAIL!");
         } else {
             // Client servera baglanıyor
-            Client.Start("127.0.0.1", 8000);
+            Client.Start("18.191.142.2", 8000);
             if (Client.socket == null) {
                 JOptionPane.showMessageDialog(this, "Connection Failed !!");
                 System.exit(0);
